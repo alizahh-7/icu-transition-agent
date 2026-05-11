@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICU Discharge Coordinator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .input-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .input-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .agent-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+        .agent-card {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #d1d5db;
+            transition: all 0.3s;
+        }
+        .agent-card.active {
+            border-left-color: #fbbf24;
+            background: #fffbeb;
+        }
+        .agent-card.complete {
+            border-left-color: #10b981;
+            background: #ecfdf5;
+        }
+        .agent-card h3 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .agent-card p {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .status-pending { background: #d1d5db; }
+        .status-active { background: #fbbf24; animation: pulse 1.5s infinite; }
+        .status-complete { background: #10b981; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .results {
+            display: none;
+        }
+        .results.show {
+            display: block;
+        }
+        .result-section {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .result-section:last-child {
+            border-bottom: none;
+        }
+        .result-section h3 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .result-content {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.7;
+            color: #374151;
+            white-space: pre-wrap;
+        }
+        .patient-info {
+            background: #eff6ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3b82f6;
+        }
+        .patient-info h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+        .patient-info p {
+            color: #1e40af;
+            margin: 5px 0;
+        }
+        .error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #dbeafe;
+            color: #1e40af;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 ICU Discharge Coordinator</h1>
+            <p>Interoperable Multi-Agent System for ICU Transitions</p>
+        </div>
+
+        <div class="card">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="patientId">🔍 FHIR Patient ID</label>
+                    <input type="text" id="patientId" placeholder="e.g., 06e1f0dd-5fbe-4480-9bb4-6b54ec02d31b" value="06e1f0dd-5fbe-4480-9bb4-6b54ec02d31b">
+                </div>
+                <div class="input-group">
+                    <label for="icuDays">📅 ICU Stay (Days)</label>
+                    <input type="number" id="icuDays" placeholder="7" value="7" min="1">
+                </div>
+            </div>
+            <button class="btn" id="startBtn" onclick="startDischarge()">
+                🚀 Start Discharge Coordination
+            </button>
+        </div>
+
+        <div class="card" id="statusCard" style="display: none;">
+            <h2 style="margin-bottom: 20px; color: #374151;">Agent Orchestration Status</h2>
+            <div class="agent-status">
+                <div class="agent-card" id="agent1">
+                    <h3><span class="status-icon status-pending"></span> Clinical Summary</h3>
+                    <p>Analyzing patient data and creating discharge summary...</p>
+                </div>
+                <div class="agent-card" id="agent2">
+                    <h3><span class="status-icon status-pending"></span> Risk Detection</h3>
+                    <p>Identifying readmission risks and safety concerns...</p>
+                </div>
+                <div class="agent-card" id="agent3">
+                    <h3><span class="status-icon status-pending"></span> Care Coordination</h3>
+                    <p>Planning follow-up appointments and care needs...</p>
+                </div>
+                <div class="agent-card" id="agent4">
+                    <h3><span class="status-icon status-pending"></span> Prior Authorization</h3>
+                    <p>Generating insurance justification documentation...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card results" id="resultsCard">
+            <div class="patient-info" id="patientInfo"></div>
+            
+            <div class="result-section">
+                <h3>📋 Clinical Summary <span class="badge">Agent 1</span></h3>
+                <div class="result-content" id="summary"></div>
+            </div>
+
+            <div class="result-section">
+                <h3>⚠️ Readmission Risks <span class="badge">Agent 2</span></h3>
+                <div class="result-content" id="risks"></div>
+            </div>
+
+            <div class="result-section">
+                <h3>🔄 Care Coordination Plan <span class="badge">Agent 3</span></h3>
+                <div class="result-content" id="carePlan"></div>
+            </div>
+
+            <div class="result-section">
+                <h3>💼 Prior Authorization <span class="badge">Agent 4</span></h3>
+                <div class="result-content" id="priorAuth"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function startDischarge() {
+            const patientId = document.getElementById('patientId').value;
+            const icuDays = parseInt(document.getElementById('icuDays').value);
+            const startBtn = document.getElementById('startBtn');
+            const statusCard = document.getElementById('statusCard');
+            const resultsCard = document.getElementById('resultsCard');
+
+            // Reset UI
+            resultsCard.classList.remove('show');
+            statusCard.style.display = 'block';
+            startBtn.disabled = true;
+            startBtn.textContent = '⏳ Processing...';
+
+            // Reset agents
+            for (let i = 1; i <= 4; i++) {
+                const agent = document.getElementById(`agent${i}`);
+                agent.className = 'agent-card';
+                agent.querySelector('.status-icon').className = 'status-icon status-pending';
+            }
+
+            try {
+                // Simulate agent progression
+                const agents = ['agent1', 'agent2', 'agent3', 'agent4'];
+                let currentAgent = 0;
+
+                const progressInterval = setInterval(() => {
+                    if (currentAgent < agents.length) {
+                        const agentEl = document.getElementById(agents[currentAgent]);
+                        agentEl.className = 'agent-card active';
+                        agentEl.querySelector('.status-icon').className = 'status-icon status-active';
+                        currentAgent++;
+                    }
+                }, 800);
+
+                // Make API call
+                const response = await fetch('http://localhost:8000/icu-discharge-fhir', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fhir_patient_id: patientId, icu_days: icuDays })
+                });
+
+                clearInterval(progressInterval);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                // Mark all agents complete
+                for (let i = 1; i <= 4; i++) {
+                    const agent = document.getElementById(`agent${i}`);
+                    agent.className = 'agent-card complete';
+                    agent.querySelector('.status-icon').className = 'status-icon status-complete';
+                }
+
+                // Display results
+                setTimeout(() => {
+                    document.getElementById('patientInfo').innerHTML = `
+                        <h3>Patient Information</h3>
+                        <p><strong>Name:</strong> ${data.patient_name}</p>
+                        <p><strong>Age:</strong> ${data.patient_age} years</p>
+                        <p><strong>Diagnosis:</strong> ${data.diagnosis}</p>
+                        <p><strong>FHIR Source:</strong> ${data.fhir_source}</p>
+                    `;
+                    document.getElementById('summary').textContent = data.discharge_packet.clinical_summary;
+                    document.getElementById('risks').textContent = data.discharge_packet.readmission_risks;
+                    document.getElementById('carePlan').textContent = data.discharge_packet.care_coordination_plan;
+                    document.getElementById('priorAuth').textContent = data.discharge_packet.prior_auth_justification;
+
+                    resultsCard.classList.add('show');
+                    statusCard.style.display = 'none';
+                }, 1000);
+
+            } catch (error) {
+                clearInterval(progressInterval);
+                statusCard.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            } finally {
+                startBtn.disabled = false;
+                startBtn.textContent = '🚀 Start Discharge Coordination';
+            }
+        }
+    </script>
+</body>
+</html>

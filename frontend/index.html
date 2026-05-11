@@ -1,0 +1,565 @@
+
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        ICU Transition Agent
+    </title>
+
+    <script type="module"
+        src="https://unpkg.com/@splinetool/viewer@1.9.59/build/spline-viewer.js">
+    </script>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- HERO -->
+
+        <div class="hero">
+
+            <div class="top-badges">
+
+                <div class="badge">
+                    🏥 SMART on FHIR Connected
+                </div>
+
+                <div class="badge">
+                    🤝 A2A Coordination Active
+                </div>
+
+                <div class="badge">
+                    ⚡ 4 AI Agents Online
+                </div>
+
+            </div>
+
+            <!-- ROBOT -->
+
+            <div class="robot-wrapper">
+
+                <spline-viewer
+                    url="https://prod.spline.design/PyzDhpQ9E5f1E3MT/scene.splinecode">
+                </spline-viewer>
+
+            </div>
+
+            <h1>
+                Interoperable ICU Transition Agent
+            </h1>
+
+            <p class="subtitle">
+                Multi-Agent AI Coordination for Safe ICU Discharge
+            </p>
+
+            <!-- FORM -->
+
+            <div class="form-grid">
+
+                <div class="input-group">
+
+                    <label>
+                        🔎 FHIR Patient ID
+                    </label>
+
+                    <input
+                        type="text"
+                        id="patientId"
+                        value="a74651a6-8141-4c7e-91b5-a43ce80e6b92">
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>
+                        🏥 ICU Stay (Days)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="icuDays"
+                        value="7">
+
+                </div>
+
+            </div>
+
+            <button
+                onclick="startDischarge()"
+                id="startBtn">
+
+                🚀 Start Discharge Coordination
+
+            </button>
+
+        </div>
+
+        <!-- STATUS -->
+
+        <div class="status-card"
+            id="statusCard">
+
+            <h2>
+                Agent Orchestration Status
+            </h2>
+
+            <div class="agents-grid">
+
+                <!-- AGENT 1 -->
+
+                <div class="agent-card"
+                    id="agent1">
+
+                    <div class="agent-header">
+
+                        <div class="status-icon status-pending">
+                        </div>
+
+                        <h3>
+                            Clinical Summary
+                        </h3>
+
+                    </div>
+
+                    <p>
+                        Creating ICU discharge summary...
+                    </p>
+
+                </div>
+
+                <!-- AGENT 2 -->
+
+                <div class="agent-card"
+                    id="agent2">
+
+                    <div class="agent-header">
+
+                        <div class="status-icon status-pending">
+                        </div>
+
+                        <h3>
+                            Risk Detection
+                        </h3>
+
+                    </div>
+
+                    <p>
+                        Analyzing readmission risks...
+                    </p>
+
+                </div>
+
+                <!-- AGENT 3 -->
+
+                <div class="agent-card"
+                    id="agent3">
+
+                    <div class="agent-header">
+
+                        <div class="status-icon status-pending">
+                        </div>
+
+                        <h3>
+                            Care Coordination
+                        </h3>
+
+                    </div>
+
+                    <p>
+                        Scheduling follow-up care...
+                    </p>
+
+                </div>
+
+                <!-- AGENT 4 -->
+
+                <div class="agent-card"
+                    id="agent4">
+
+                    <div class="agent-header">
+
+                        <div class="status-icon status-pending">
+                        </div>
+
+                        <h3>
+                            Prior Authorization
+                        </h3>
+
+                    </div>
+
+                    <p>
+                        Generating insurance approval...
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- AGENT CHAT LOGS -->
+
+            <div class="logs-section">
+
+                <h3>
+                    🤝 Agent-to-Agent Communication
+                </h3>
+
+                <div class="agent-logs"
+                    id="agentLogs">
+
+                    <div class="log-entry">
+                        Waiting for orchestration...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RESULTS -->
+
+        <div class="results-card"
+            id="resultsCard">
+
+            <div class="results-header">
+
+                <h2>
+                    ICU Discharge Packet
+                </h2>
+
+                <div class="success-badge">
+                    ✅ Coordination Complete
+                </div>
+
+            </div>
+
+            <!-- TIMELINE -->
+
+            <div class="timeline">
+
+                <div class="timeline-item">
+                    ✅ FHIR patient context loaded
+                </div>
+
+                <div class="timeline-item">
+                    ✅ Multi-agent orchestration completed
+                </div>
+
+                <div class="timeline-item">
+                    ✅ Care coordination generated
+                </div>
+
+                <div class="timeline-item">
+                    ✅ Insurance justification created
+                </div>
+
+            </div>
+
+            <!-- PATIENT -->
+
+            <div class="result-section"
+                id="patientInfo">
+            </div>
+
+            <!-- SUMMARY -->
+
+            <div class="result-section">
+
+                <h3>
+                    Clinical Summary
+                </h3>
+
+                <p id="summary"></p>
+
+            </div>
+
+            <!-- RISKS -->
+
+            <div class="result-section">
+
+                <h3>
+                    Readmission Risks
+                </h3>
+
+                <p id="risks"></p>
+
+            </div>
+
+            <!-- CARE -->
+
+            <div class="result-section">
+
+                <h3>
+                    Care Coordination Plan
+                </h3>
+
+                <p id="carePlan"></p>
+
+            </div>
+
+            <!-- PRIOR AUTH -->
+
+            <div class="result-section">
+
+                <h3>
+                    Prior Authorization
+                </h3>
+
+                <p id="priorAuth"></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        function addLog(message) {
+
+            const logs =
+                document.getElementById('agentLogs');
+
+            const log =
+                document.createElement('div');
+
+            log.className =
+                'log-entry';
+
+            log.innerHTML =
+                message;
+
+            logs.appendChild(log);
+
+            logs.scrollTop =
+                logs.scrollHeight;
+        }
+
+        async function startDischarge() {
+
+            const patientId =
+                document.getElementById('patientId').value;
+
+            const icuDays =
+                parseInt(
+                    document.getElementById('icuDays').value
+                );
+
+            const startBtn =
+                document.getElementById('startBtn');
+
+            const statusCard =
+                document.getElementById('statusCard');
+
+            const resultsCard =
+                document.getElementById('resultsCard');
+
+            let progressInterval;
+
+            resultsCard.classList.remove('show');
+
+            document.getElementById('agentLogs').innerHTML = '';
+
+            statusCard.style.display = 'block';
+
+            startBtn.disabled = true;
+
+            startBtn.innerHTML =
+                '⏳ Coordinating Agents...';
+
+            for (let i = 1; i <= 4; i++) {
+
+                const agent =
+                    document.getElementById(`agent${i}`);
+
+                agent.className =
+                    'agent-card';
+
+                agent.querySelector('.status-icon').className =
+                    'status-icon status-pending';
+            }
+
+            try {
+
+                const agents =
+                    ['agent1', 'agent2', 'agent3', 'agent4'];
+
+                let currentAgent = 0;
+
+                progressInterval = setInterval(() => {
+
+                    if (currentAgent < agents.length) {
+
+                        const agentEl =
+                            document.getElementById(
+                                agents[currentAgent]
+                            );
+
+                        agentEl.className =
+                            'agent-card active';
+
+                        agentEl.querySelector('.status-icon').className =
+                            'status-icon status-active';
+
+                        /* CHAT LOGS */
+
+                        if (currentAgent === 0) {
+
+                            addLog(`
+                                🩺 Clinical Summary Agent →
+                                ICU stabilization summary generated.
+                            `);
+                        }
+
+                        if (currentAgent === 1) {
+
+                            addLog(`
+                                ⚠️ Risk Detection Agent →
+                                Persistent tachycardia detected.
+                                Elevated readmission risk flagged.
+                            `);
+                        }
+
+                        if (currentAgent === 2) {
+
+                            addLog(`
+                                🏥 Care Coordination Agent →
+                                Pulmonary follow-up +
+                                home oxygen scheduled.
+                            `);
+                        }
+
+                        if (currentAgent === 3) {
+
+                            addLog(`
+                                📄 Prior Authorization Agent →
+                                Insurance justification prepared
+                                for rehab approval.
+                            `);
+                        }
+
+                        currentAgent++;
+                    }
+
+                }, 900);
+
+                const response =
+                    await fetch(
+                        'http://127.0.0.1:8010/icu-discharge-fhir',
+                        {
+                            method: 'POST',
+
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+
+                            body: JSON.stringify({
+                                fhir_patient_id: patientId,
+                                icu_days: icuDays
+                            })
+                        }
+                    );
+
+                clearInterval(progressInterval);
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        `Server Error ${response.status}`
+                    );
+                }
+
+                const data =
+                    await response.json();
+
+                for (let i = 1; i <= 4; i++) {
+
+                    const agent =
+                        document.getElementById(`agent${i}`);
+
+                    agent.className =
+                        'agent-card complete';
+
+                    agent.querySelector('.status-icon').className =
+                        'status-icon status-complete';
+                }
+
+                setTimeout(() => {
+
+                    document.getElementById('patientInfo').innerHTML = `
+                        <h3>Patient Overview</h3>
+
+                        <p>
+                            <strong>Name:</strong>
+                            ${data.patient_name}
+                        </p>
+
+                        <p>
+                            <strong>Age:</strong>
+                            ${data.patient_age}
+                        </p>
+
+                        <p>
+                            <strong>Diagnosis:</strong>
+                            ${data.diagnosis}
+                        </p>
+                    `;
+
+                    document.getElementById('summary').textContent =
+                        data.discharge_packet.clinical_summary;
+
+                    document.getElementById('risks').textContent =
+                        data.discharge_packet.readmission_risks;
+
+                    document.getElementById('carePlan').textContent =
+                        data.discharge_packet.care_coordination_plan;
+
+                    document.getElementById('priorAuth').textContent =
+                        data.discharge_packet.prior_auth_justification;
+
+                    resultsCard.classList.add('show');
+
+                }, 1000);
+
+            }
+
+            catch (error) {
+
+                clearInterval(progressInterval);
+
+                statusCard.innerHTML = `
+                    <div class="error">
+                        ❌ ${error.message}
+                    </div>
+                `;
+
+                console.error(error);
+            }
+
+            finally {
+
+                startBtn.disabled = false;
+
+                startBtn.innerHTML =
+                    '🚀 Start Discharge Coordination';
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
