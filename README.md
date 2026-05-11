@@ -212,4 +212,3 @@ icu-transition-agent/
 
 ---
 
-*Built in under 24 hours for the Agents Assemble Hackathon 2026*
