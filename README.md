@@ -203,12 +203,3 @@ icu-transition-agent/
 
 ---
 
-## 🏆 Hackathon
-
-- **Event:** Agents Assemble — Healthcare AI Endgame 2026
-- **Track:** MCP Superpower + A2A Agent
-- **Platform:** Prompt Opinion
-- **Prize Pool:** $25,000
-
----
-
